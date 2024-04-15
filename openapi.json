@@ -2,16 +2,11 @@
     "openapi": "3.0.0",
     "info": {
         "version": "1.0.0",
-        "title": "wzdx test",
-        "description": "WZDx test"
+        "title": "test",
+        "description": "test"
     },
-    "servers": [
-        {
-            "url": "${serverURL}"
-        }
-    ],
     "paths": {
-        "/WorkZoneFeed.geojson": {
+        "/endpoint": {
             "get": {
                 "description": "Returns the WZDx feed",
                 "responses": {
@@ -19,11 +14,11 @@
                         "$ref": "#/components/responses/InternalServerError"
                     },
                     "200": {
-                        "description": "valid WorkZoneFeed",
+                        "description": "some lambda",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/WorkZoneFeed"
+                                    "$ref": "#/components/schemas/SomeType"
                                 }
                             }
                         }
@@ -45,8 +40,8 @@
     },
     "components": {
         "schemas": {
-            "WorkZoneFeed": {
-                "$ref": "https://raw.githubusercontent.com/usdot-jpo-ode/wzdx/main/schemas/4.2/WorkZoneFeed.json"
+            "SomeType": {
+                "$ref": "https://raw.githubusercontent.com/swagger-api/swagger-petstore/master/src/main/resources/openapi.yaml#/components/schemas/Pet"
             },
             "InternalServerError": {
                 "type": "object",

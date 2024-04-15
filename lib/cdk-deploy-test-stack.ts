@@ -29,7 +29,7 @@ export class CdkDeployTestStack extends cdk.Stack {
         );
 
         // tell apigateway with openapi what lambda to call
-        openapiConfig.paths["/WorkZoneFeed.geojson"].get["x-amazon-apigateway-integration"].uri =
+        openapiConfig.paths["/endpoint"].get["x-amazon-apigateway-integration"].uri =
             `arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/${l.functionArn}/invocations`
 
 
@@ -46,7 +46,7 @@ export class CdkDeployTestStack extends cdk.Stack {
         });
 
         new cdk.CfnOutput(this, "endpoint", {
-            value: `${restAPI.url}/WorkZoneFeed.geojson`,
+            value: `${restAPI.url}/endpoint`,
         });
     }
 }
