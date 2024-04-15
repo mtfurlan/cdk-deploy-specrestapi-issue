@@ -1,0 +1,134 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "wzdx test",
+        "description": "WZDx test"
+    },
+    "servers": [
+        {
+            "url": "${serverURL}"
+        }
+    ],
+    "paths": {
+        "/WorkZoneFeed.geojson": {
+            "get": {
+                "description": "Returns the WZDx feed",
+                "responses": {
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    },
+                    "200": {
+                        "description": "valid WorkZoneFeed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WorkZoneFeed"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-amazon-apigateway-integration": {
+                    "uri": "REPLACE_ME",
+                    "responses": {
+                        "default": {
+                            "statusCode": "200"
+                        }
+                    },
+                    "passthroughBehavior": "when_no_match",
+                    "httpMethod": "POST",
+                    "type": "aws_proxy"
+                }
+            },
+            "options": {
+                "summary": "CORS support",
+                "description": "Enable CORS by returning correct headers\n",
+                "tags": [
+                    "CORS"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Default response for CORS method",
+                        "headers": {
+                            "Access-Control-Allow-Origin": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            },
+                            "Access-Control-Allow-Methods": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            },
+                            "Access-Control-Allow-Headers": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "content": {}
+                    }
+                },
+                "x-amazon-apigateway-integration": {
+                    "type": "mock",
+                    "requestTemplates": {
+                        "application/json": "{\"statusCode\": 200}\n"
+                    },
+                    "responses": {
+                        "default": {
+                            "statusCode": "200",
+                            "responseParameters": {
+                                "method.response.header.Access-Control-Allow-Headers":
+                                "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+                                "method.response.header.Access-Control-Allow-Methods":
+                                "'*'",
+                                "method.response.header.Access-Control-Allow-Origin":
+                                "'*'"
+                            },
+                            "responseTemplates": {
+                                "application/json":
+                                "{\"statusCode\": 200}\n"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "WorkZoneFeed": {
+                "$ref": "https://raw.githubusercontent.com/usdot-jpo-ode/wzdx/main/schemas/4.2/WorkZoneFeed.json"
+            },
+            "InternalServerError": {
+                "type": "object",
+                "description": "some kind of internal error",
+                "required": [
+                    "message",
+                    "err"
+                ],
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "err": {
+                        "type": "object"
+                    }
+                }
+            }
+        },
+        "responses": {
+            "InternalServerError": {
+                "description": "something went wrong",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/InternalServerError"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
