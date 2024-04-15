@@ -6,7 +6,7 @@ export const handler = async (
 ): Promise<APIGatewayProxyResult> => {
     return {
         statusCode: 200,
-        body: "look it's not real but whatever",
+        body: '{"result": "look it\'s not real but whatever"}',
         headers: {
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",

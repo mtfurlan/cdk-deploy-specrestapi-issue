@@ -44,5 +44,9 @@ export class CdkDeployTestStack extends cdk.Stack {
             ),
             sourceArn: restAPI.arnForExecuteApi("*"),
         });
+
+        new cdk.CfnOutput(this, "endpoint", {
+            value: `${restAPI.url}/WorkZoneFeed.geojson`,
+        });
     }
 }
