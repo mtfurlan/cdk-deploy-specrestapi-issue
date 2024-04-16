@@ -17,3 +17,11 @@ Additionally, these warnings were found:                                        
 You can demostrate those errors by deploying this, and they go away if you
 change the SomeType type to string or something.
 
+
+## Steps
+```
+git clone https://github.com/mtfurlan/cdk-deploy-specrestapi-issue
+cd cdk-deploy-specrestapi-issue
+npm install
+npm run cdk deploy
+```
