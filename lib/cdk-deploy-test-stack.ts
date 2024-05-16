@@ -13,17 +13,11 @@ export class CdkDeployTestStack extends cdk.Stack {
         const openapiConfig = JSON.parse(openapiText);
 
 
-        const filePath = "src/lambda.ts";
-        if (!fs.existsSync(filePath)) {
-            console.log(`lambda file doesn't exist ${filePath}`);
-            throw new Error("lambda config file missing, check log");
-        }
-
         // create lambda
         const l = new NodejsFunction(this, `lambda`,
             {
                 runtime: Runtime.NODEJS_20_X,
-                entry: filePath,
+                entry: "src/lambda.ts",
                 timeout: cdk.Duration.seconds(10),
             },
         );
@@ -32,6 +26,19 @@ export class CdkDeployTestStack extends cdk.Stack {
         openapiConfig.paths["/endpoint"].get["x-amazon-apigateway-integration"].uri =
             `arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/${l.functionArn}/invocations`
 
+
+        // create authorizer
+        const auth = new NodejsFunction(this, `authorizer`,
+            {
+                runtime: Runtime.NODEJS_20_X,
+                entry: "src/authenticate.ts",
+                timeout: cdk.Duration.seconds(10),
+            },
+        );
+
+        openapiConfig.components.securitySchemes
+                .BasicAuth["x-amazon-apigateway-authorizer"].authorizerUri =
+            `arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/${auth.functionArn}/invocations`
 
 
         const restAPI = new apigateway.SpecRestApi( this, `api`, {

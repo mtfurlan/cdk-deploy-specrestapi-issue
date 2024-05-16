@@ -8,11 +8,13 @@
     "paths": {
         "/endpoint": {
             "get": {
-                "description": "Returns the WZDx feed",
+                "description": "some test endpoint",
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
                 "responses": {
-                    "500": {
-                        "$ref": "#/components/responses/InternalServerError"
-                    },
                     "200": {
                         "description": "some lambda",
                         "content": {
@@ -39,9 +41,24 @@
         }
     },
     "components": {
+        "securitySchemes": {
+            "BasicAuth": {
+                "type": "http",
+                "scheme": "basic",
+                "description": "http basic auth",
+                "x-amazon-apigateway-authtype": "basic",
+                "x-amazon-apigateway-authorizer": {
+                    "type": "request",
+                    "identitySource" : "method.request.header.Authorization",
+                    "authorizerUri": "REPLACE_ME",
+                    "enableSimpleResponses": true,
+                    "authorizerPayloadFormatVersion": 2.0
+                }
+            }
+        },
         "schemas": {
             "SomeType": {
-                "$ref": "https://raw.githubusercontent.com/swagger-api/swagger-petstore/master/src/main/resources/openapi.yaml#/components/schemas/Pet"
+                "type": "string"
             },
             "InternalServerError": {
                 "type": "object",
@@ -56,18 +73,6 @@
                     },
                     "err": {
                         "type": "object"
-                    }
-                }
-            }
-        },
-        "responses": {
-            "InternalServerError": {
-                "description": "something went wrong",
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "$ref": "#/components/schemas/InternalServerError"
-                        }
                     }
                 }
             }
