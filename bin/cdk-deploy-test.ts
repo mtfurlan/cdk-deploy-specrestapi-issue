@@ -19,3 +19,8 @@ new CdkDeployTestStack(app, 'CdkDeployTestStack', {
 
   /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
 });
+
+cdk.Tags.of(app).add("Project", "temp debug", {
+    excludeResourceTypes: ['AWS::ApiGatewayV2::Api'],
+});
+

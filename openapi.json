@@ -34,6 +34,7 @@
                         }
                     },
                     "passthroughBehavior": "when_no_match",
+                    "payloadFormatVersion": "1.0",
                     "httpMethod": "POST",
                     "type": "aws_proxy"
                 }
@@ -43,16 +44,17 @@
     "components": {
         "securitySchemes": {
             "BasicAuth": {
-                "type": "http",
-                "scheme": "basic",
+                "type" : "apiKey",
+                "name" : "Authorization",
+                "in" : "header",
                 "description": "http basic auth",
                 "x-amazon-apigateway-authtype": "basic",
                 "x-amazon-apigateway-authorizer": {
                     "type": "request",
-                    "identitySource" : "method.request.header.Authorization",
+                    "identitySource" : "$request.header.Authorization",
                     "authorizerUri": "REPLACE_ME",
-                    "enableSimpleResponses": true,
-                    "authorizerPayloadFormatVersion": 2.0
+                    "authorizerPayloadFormatVersion" : "2.0",
+                    "enableSimpleResponses": true
                 }
             }
         },

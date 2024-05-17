@@ -1,6 +1,6 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { aws_apigateway as apigateway } from "aws-cdk-lib";
+import { aws_apigatewayv2 as apigatewayv2 } from "aws-cdk-lib";
 import { Runtime } from "aws-cdk-lib/aws-lambda";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import * as fs from "fs";
@@ -41,19 +41,33 @@ export class CdkDeployTestStack extends cdk.Stack {
             `arn:\${AWS::Partition}:apigateway:\${AWS::Region}:lambda:path/2015-03-31/functions/${auth.functionArn}/invocations`
 
 
-        const restAPI = new apigateway.SpecRestApi( this, `api`, {
-            apiDefinition: apigateway.AssetApiDefinition.fromInline(openapiConfig)
+        const api = new apigatewayv2.CfnApi(this, 'MyApi', {
+            body: openapiConfig,
+            failOnWarnings: true,
+            //disableExecuteApiEndpoint: false, //TODO: true when custom domain
         });
-
         l.addPermission("PermitAPIGInvocation", {
             principal: new cdk.aws_iam.ServicePrincipal(
                 "apigateway.amazonaws.com",
             ),
-            sourceArn: restAPI.arnForExecuteApi("*"),
+            sourceArn: api.stack.formatArn({
+                service: "execute-api",
+                resource: api.attrApiId,
+                arnFormat: cdk.ArnFormat.SLASH_RESOURCE_NAME,
+                resourceName: `*/*/*`, // could do something like "$default/GET/endpoint" I think
+            })
         });
 
+
+        const stage = new apigatewayv2.CfnStage(this, 'MyCfnStage', {
+            apiId: api.ref,
+            stageName: '$default',
+            autoDeploy: true
+        });
+        stage.addDependency(api);
+
         new cdk.CfnOutput(this, "endpoint", {
-            value: `${restAPI.url}/endpoint`,
+            value: `${api.attrApiEndpoint}/endpoint`,
         });
     }
 }
