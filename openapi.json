@@ -45,16 +45,15 @@
         "securitySchemes": {
             "BasicAuth": {
                 "type" : "apiKey",
-                "name" : "Authorization",
+                "name" : "authorization",
                 "in" : "header",
                 "description": "http basic auth",
-                "x-amazon-apigateway-authtype": "basic",
+                "x-amazon-apigateway-authtype": "custom",
                 "x-amazon-apigateway-authorizer": {
                     "type": "request",
-                    "identitySource" : "$request.header.authorization",
+                    "identitySource" : "method.request.header.authorization",
                     "authorizerUri": "REPLACE_ME",
-                    "authorizerPayloadFormatVersion" : "2.0",
-                    "enableSimpleResponses": true
+                    "authorizerResultTtlInSeconds" : 0
                 }
             }
         },
