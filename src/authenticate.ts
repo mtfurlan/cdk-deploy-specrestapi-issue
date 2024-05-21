@@ -16,10 +16,11 @@ export const handler = async (
     | APIGatewaySimpleAuthorizerResult
     | APIGatewaySimpleAuthorizerWithContextResult<AuthorizationContext>
 > => {
+    console.log(event.headers);
     try {
-        const authHeader = event.headers?.["Authorization"];
+        const authHeader = event.headers?.["authorization"];
         if (authHeader) {
-            const matches = authHeader.match(/Basic (.*)$/);
+            const matches = authHeader.match(/Basic (.*)$/i);
             if (!matches) {
                 throw new Error("Authorization header wasn't Basic or something");
             }

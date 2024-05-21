@@ -51,7 +51,7 @@
                 "x-amazon-apigateway-authtype": "basic",
                 "x-amazon-apigateway-authorizer": {
                     "type": "request",
-                    "identitySource" : "$request.header.Authorization",
+                    "identitySource" : "$request.header.authorization",
                     "authorizerUri": "REPLACE_ME",
                     "authorizerPayloadFormatVersion" : "2.0",
                     "enableSimpleResponses": true
